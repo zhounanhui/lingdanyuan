@@ -74,7 +74,7 @@ $axure.internal(function($ax) {
                                 elementIdQuery.after("<div id='" + elementId + "_ann' class='annnote'>&#8203;</div>");
                                 appendFns($('#' + elementId + "_ann"), fns);
                             }
-                            _adjustIconLocation(dObj, elementId);
+                            _adjustIconLocation(elementId, dObj);
                         }
 
                         if (create) {
@@ -134,7 +134,7 @@ $axure.internal(function($ax) {
     });
 
     //adjust annotation location to a element's top right corner
-    var _adjustIconLocation = $ax.annotation.adjustIconLocation = function(dObj, id) {
+    var _adjustIconLocation = $ax.annotation.adjustIconLocation = function(id, dObj) {
         var ann = document.getElementById(id + "_ann");
         if(ann) {
             var corners = $ax.public.fn.getCornersFromComponent(id);
@@ -143,7 +143,8 @@ $axure.internal(function($ax) {
             //note size is 14x8, this is how rp calculated it as well
             ann.style.left = (newTopRight.x - width) + "px";
 
-            var yOffset = dObj.type == 'tableCell' ? 0 : -8;
+            var elementType = dObj ? dObj.type : $ax.getTypeFromElementId(id);
+            var yOffset = $ax.public.fn.IsTableCell(elementType) ? 0 : -8;
             ann.style.top = (newTopRight.y + yOffset) + "px";
         }
 
