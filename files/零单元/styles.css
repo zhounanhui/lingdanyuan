@@ -18,10 +18,11 @@
   z-index:0;
 }
 #u0 {
-  border-width:0px;
-  position:absolute;
-  left:0px;
-  top:0px;
+  position:fixed;
+  left:50%;
+  margin-left:-187.5px;
+  top:50%;
+  margin-top:-384px;
   width:375px;
   height:768px;
 }
@@ -675,6 +676,8 @@
   height:574px;
   overflow:auto;
   -webkit-overflow-scrolling:touch;
+  -ms-overflow-x:hidden;
+  overflow-x:hidden;
   background-image:none;
   border:none;
   border-radius:0px;
