@@ -186,6 +186,8 @@ input[type=text]::-ms-clear {
 }
 
 #clipFrameScroll {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .splitterMask {
@@ -734,7 +736,7 @@ div.axClearMsgBubble_Player {
 #axureLogo {
     display: inline-block;
     width: 56px;
-    height: 36px;
+    height: 100%;
     padding-top: 1px;
     background: url('../images/axure9_logo.svg') no-repeat center center, linear-gradient(transparent,transparent);
 }
