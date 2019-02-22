@@ -1,5 +1,5 @@
 ﻿(function () {
-    if (IOS && SAFARI) {
+    if ((IOS && SAFARI) || SHARE_APP) {
         var outerHtml = document.documentElement;
         outerHtml.id = 'ios-safari';
         var html = document.createElement('html');
@@ -55,10 +55,15 @@
             if (message == "setContentScale") {
                 updateHtmlWidth(data.panelWidthOffset, data.scale, data.viewportHeight, data.scaleN);
             } else if (message == "setDeviceMode") {
-                isDevice = data.device;
+                isDevice = data.device && !data.scaleToWidth;
                 if (isDevice) deviceWidth = data.width;
                 updateHtmlWidth(0);
             }
+        });
+
+
+        $('#ios-safari-html').scroll(function () {
+            $axure.updateWindowInfo();
         });
     }
 })();
