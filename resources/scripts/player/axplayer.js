@@ -100,7 +100,7 @@ var iphoneXFirstPass = true;
             (FIREFOX && BROWSER_VERSION < 57) || // Support Quantum 
             ($axure.browser.isEdge && BROWSER_VERSION < 15) || // 15 for mobile devices (else could go 16, possibly 17)
             IE_10_AND_BELOW) {
-            appendOutOfDateNotification();
+            if (!QQ && !UC) appendOutOfDateNotification();
         }
 
         if (CHROME_5_LOCAL && !$('body').attr('pluginDetected')) {
@@ -900,6 +900,7 @@ var iphoneXFirstPass = true;
         if (h && scaleVal == 1) $axure.player.noFrame = true;
 
         var clipToView = h && !$axure.player.noFrame;
+        var isDevice = h;
 
         var mainPanelWidth = $('#mainPanel').width();
         var mainPanelHeight = $('#mainPanel').height();
@@ -942,8 +943,6 @@ var iphoneXFirstPass = true;
 
             $('#mainPanelContainer').width(w + leftPadding + rightPadding);
             $('#mainPanelContainer').height(h + topPadding + bottomPadding);
-
-            $axure.messageCenter.postMessage('setDeviceMode', { device: true, width: w });
         } else {
             $('#mainFrame').width('100%');
             $('#mainFrame').height(h);
@@ -959,9 +958,8 @@ var iphoneXFirstPass = true;
                 'margin': '',
                 'top': ''
             });
-
-            $axure.messageCenter.postMessage('setDeviceMode', { device: false, scaleToWidth: (scaleVal == "1") });
         }
+        $axure.messageCenter.postMessage('setDeviceMode', { device: isDevice, width: w, scaleToWidth: (scaleVal == "1") });
 
         $(".vpScaleOption").show();
         var prevScaleN = $('#mainPanelContainer').css('transform');
