@@ -627,8 +627,6 @@
             $ax.event.raiseSyntheticEvent(id, "onPanelStateChange");
             $ax.event.leavingState(oldStateId);
             if (hasEasing) _popContainer(id, true);
-
-            $ax.dynamicPanelManager.updateMobileScroll(id, stateId);
         };
         // Must do state out first, so if we cull by new state, location is correct
         _setVisibility(id, oldStateId, {
@@ -786,7 +784,7 @@
         if(focus) $ax.event.addSuppressedEvent($ax.repeater.removeSuffixFromElementId(focus), 'OnLostFocus');
         jobj.append(container.children());
         _setCurrFocus(focus);
-        $('body').first().append(container);
+        $('body').append(container);
 
         // Layer doesn't have children containers to clean up
         if(panel) {

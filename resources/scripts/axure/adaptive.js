@@ -432,9 +432,7 @@
     $ax.messageCenter.addMessageListener(function(message, data) {
         //If the adaptive plugin hasn't been initialized yet then 
         //save the view to load so that it can get set when initialize occurs
-        if (message == 'switchAdaptiveView') {
-            if (window.name != 'mainFrame') return;
-
+        if(message == 'switchAdaptiveView') {
             var href = window.location.href.split('#')[0];
             var lastSlash = href.lastIndexOf('/');
             href = href.substring(lastSlash + 1);
@@ -445,16 +443,12 @@
             if(!_isAdaptiveInitialized()) {
                 _initialViewToLoad = view;
             } else _handleLoadViewId(view);
-        } else if (message == 'setAdaptiveViewForSize') {
-            if (window.name != 'mainFrame') return;
-
+        } else if(message == 'setAdaptiveViewForSize') {
             _autoIsHandledBySidebar = true;
             if(!_isAdaptiveInitialized()) {
                 _initialViewSizeToLoad = data;
             } else _handleSetViewForSize(data.width, data.height);
         } else if (message == 'getScale') {
-            if (window.name != 'mainFrame') return;
-
             var prevScaleN = data.prevScaleN;
             var newScaleN = 1;
             var contentOriginOffset = 0;
@@ -462,14 +456,12 @@
             var $body = $('body');
             $body.css('height', '');
 
-            if (data.scale != 0) {
-                var adjustScrollScale = false;
+            if (data.scale != 0) {                
                 if ($('html').getNiceScroll().length == 0 && !MOBILE_DEVICE && !SAFARI) {
-                    //adding nicescroll so width is correct when getting scale
-                    _addNiceScroll($('html'), { emulatetouch: false, horizrailenabled: false });
-                    adjustScrollScale = true;
+                    $('html').scrollLeft(0);
+                    $('html').niceScroll({ emulatetouch: false, horizrailenabled: false });
                 }
-                if (!MOBILE_DEVICE && SAFARI) _removeNiceScroll($('html'));
+                if (!MOBILE_DEVICE && SAFARI) $('html').getNiceScroll().remove();
 
                 $('html').css('overflow-x', 'hidden');
 
@@ -490,15 +482,10 @@
                     if (isCentered) contentOriginOffset = scaleN * (bodyWidth / 2);
                 }
 
-                if ((SAFARI && IOS) || SHARE_APP) {
+                if (SAFARI && IOS) {
                     var pageSize = $ax.public.fn.getPageSize();
                     $body.first().css('height', pageSize.bottom + 'px');
-                } //else $body.css('height', $body.height() + 'px');
-
-                if (adjustScrollScale) {
-                    _removeNiceScroll($('html'));
-                    _addNiceScroll($('html'), { emulatetouch: false, horizrailenabled: false, cursorwidth: Math.ceil(6 / newScaleN) + 'px', cursorborder: 1 / newScaleN + 'px solid #fff', cursorborderradius: 5 / newScaleN + 'px' });
-                }
+                } else $body.css('height', $body.height() + 'px');
             }
             var contentScale = {
                 scaleN: newScaleN,
@@ -512,10 +499,7 @@
             };
             $axure.messageCenter.postMessage('setContentScale', contentScale);
 
-        } else if (message == 'setDeviceMode') {
-            if (window.name != 'mainFrame') return;
-
-            _isDeviceMode = data.device;
+        } else if(message == 'setDeviceMode') {
             if (data.device) {
                 // FIXES firefox cursor not staying outside initial device frame border
                 // SAFARI needs entire content height so that trackpad can be disabled
@@ -524,9 +508,10 @@
                 //    $('html').css('height', pageSize.bottom + 'px');
                 //}
                 
-                _removeNiceScroll($('html'));
+                $('html').getNiceScroll().remove();
                 if (!MOBILE_DEVICE) {
-                    _addNiceScroll($('html'), { emulatetouch: true, horizrailenabled: false });
+                    $('html').scrollLeft(0);
+                    $('html').niceScroll({ emulatetouch: true, horizrailenabled: false });
                     $('html').addClass('mobileFrameCursor');
                     $('html').css('cursor', 'url(resources/css/images/touch.cur), auto');
                     $('html').css('cursor', 'url(resources/css/images/touch.svg) 32 32, auto');
@@ -553,40 +538,16 @@
                 $('body').css('margin', '0px');
                 $(function () { _setHorizontalScroll(false); });
             } else {
-                _removeNiceScroll($('html'));
+                $('html').getNiceScroll().remove();
                 $('html').css('overflow-x', '');
                 $('html').css('cursor', '');
                 //$('html').removeAttr('style');
                 $('body').css('margin', '');
                 $('html').removeClass('mobileFrameCursor');
                 $(function () { _setHorizontalScroll(!data.scaleToWidth); });
-
-                $ax.dynamicPanelManager.initMobileScroll();
             }
         }
     });
-
-    var _isDeviceMode = false;
-    $ax.adaptive.isDeviceMode = function () {
-        return _isDeviceMode;
-    }
-    
-    var _removeNiceScroll = $ax.adaptive.removeNiceScroll = function ($container) {
-        $container.scrollLeft(0);
-        $container.scrollTop(0);
-        $container.getNiceScroll().remove();
-        //clean up nicescroll css
-        if (IE) $container.css({ '-ms-overflow-y': '', 'overflow-y': '', '-ms-overflow-style': '', '-ms-touch-action': '' });
-    }
-
-    var _addNiceScroll = $ax.adaptive.addNiceScroll = function ($container, options) {
-        $container.scrollLeft(0);
-        $container.scrollTop(0);
-        $container.niceScroll(options);
-        //clean up nicescroll css so child scroll containers show scrollbars in IE
-        if (IE) $container.css({ '-ms-overflow-y': '', '-ms-overflow-style': '' });
-    }
-
 
     $ax.adaptive.updateMobileScrollOnBody = function () {
         var niceScroll = $('html').getNiceScroll();

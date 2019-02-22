@@ -55,14 +55,13 @@
     });
 
     var _windowInfo;
-    var _updateWindowInfo = $axure.updateWindowInfo = function () {
+    var _updateWindowInfo = function () {
         var win = {};
         var jWin = $(window);
-        var scrollWin = $('#ios-safari-html').length > 0 ? $('#ios-safari-html') : jWin;
         win.width = jWin.width();
         win.height = jWin.height();
-        win.scrollx = scrollWin.scrollLeft();
-        win.scrolly = scrollWin.scrollTop();
+        win.scrollx = jWin.scrollLeft();
+        win.scrolly = jWin.scrollTop();
         _windowInfo = win;
     };
     $ax.getWindowInfo = function () {
